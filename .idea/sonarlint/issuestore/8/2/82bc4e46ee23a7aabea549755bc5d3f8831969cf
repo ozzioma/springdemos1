@@ -1,0 +1,27 @@
+
+_
+java:S2147F"DCombine this catch with the one at line 66, which has the same body.(æ§‹âþÿÿÿÿ
+V	java:S1250"<This block of commented-out lines of code should be removed.(÷¡ªÚýÿÿÿÿ
+S
+java:S3878<"8Remove this array creation and simply pass the elements.(´ÎÇºùÿÿÿÿ
+a
+java:S1128"KRemove this unused import 'com.sap.olingo.jpa.metadata.api.JPAEdmProvider'.(Çß°˜
+c
+java:S1128"MRemove this unused import 'org.apache.olingo.commons.api.edmx.EdmxReference'.(å„Ø˜
+Z
+java:S1128"?Remove this unused import 'org.apache.olingo.server.api.OData'.(Í“Ñåúÿÿÿÿ
+`
+java:S1128	"JRemove this unused import 'org.apache.olingo.server.api.ODataHttpHandler'.(íÜÂ¬
+_
+java:S1128
+"IRemove this unused import 'org.apache.olingo.server.api.ServiceMetadata'.(ƒÕò™
+i
+java:S1128"SRemove this unused import 'org.springframework.web.bind.annotation.RequestMapping'.(ö»¿ë
+Y
+java:S1128"CRemove this unused import 'javax.persistence.EntityManagerFactory'.(îÜð
+F
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ
+m
+java:S1128"RRemove this unused import 'org.springframework.web.bind.annotation.RequestMethod'.(–ûÆ™ùÿÿÿÿ
+s
+java:S2226 "XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(æó¨§ûÿÿÿÿ

@@ -1,0 +1,28 @@
+
+S	java:S106"9Replace this use of System.out or System.err by a logger.(ã õàşÿÿÿÿ
+N	java:S106"9Replace this use of System.out or System.err by a logger.(ŸĞ•Ë
+S	java:S106%"9Replace this use of System.out or System.err by a logger.(Ğãäúÿÿÿÿ
+S	java:S106'"9Replace this use of System.out or System.err by a logger.(ŠîÑúÿÿÿÿ
+N	java:S106("9Replace this use of System.out or System.err by a logger.(á•Òë
+N	java:S106)"9Replace this use of System.out or System.err by a logger.( Æ°—
+N	java:S106*"9Replace this use of System.out or System.err by a logger.(“Òœî
+S	java:S106+"9Replace this use of System.out or System.err by a logger.(óãÉÒøÿÿÿÿ
+M	java:S106,"9Replace this use of System.out or System.err by a logger.(‚—„9
+S	java:S1065"9Replace this use of System.out or System.err by a logger.(â¿Øıÿÿÿÿ
+]	java:S125:"<This block of commented-out lines of code should be removed.(Æ¼€’ÿÿÿÿÿ8¯ºØüÀ/
+S	java:S106@"9Replace this use of System.out or System.err by a logger.(Ñã¤áıÿÿÿÿ
+X	java:S125>"<This block of commented-out lines of code should be removed.(İ£˜ü8Ò£ĞüÀ/
+G
+java:S1602A",Remove useless curly braces around statement(’óì²ùÿÿÿÿ
+S	java:S106B"9Replace this use of System.out or System.err by a logger.(ìã´Œşÿÿÿÿ
+Q	java:S125E"<This block of commented-out lines of code should be removed.(ã·€©
+k
+java:S1128"IRemove this unused import 'javax.servlet.http.HttpServletRequestWrapper'.(ŞÇ¶¦ıÿÿÿÿ8±°ËüÀ/
+P
+java:S1128".Remove this unused import 'java.util.HashMap'.(™˜”€ùÿÿÿÿ8²°ËüÀ/
+M
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8²°ËüÀ/
+L
+java:S1128"*Remove this unused import 'java.util.Map'.(¼è½Òşÿÿÿÿ8²°ËüÀ/
+P
+java:S1128".Remove this unused import 'java.util.TreeMap'.(¨éˆèıÿÿÿÿ8³°ËüÀ/
