@@ -17,6 +17,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,6 +79,20 @@ public class PrimaryDbConfig
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(primaryEntityManager().getObject());
         return transactionManager;
+    }
+
+    @Bean
+    @Qualifier("primaryEmf")
+    public EntityManagerFactory getEntityManagerFactory()
+    {
+        return primaryEntityManager().getObject();
+    }
+
+    @Bean
+    @Qualifier("primaryEm")
+    public EntityManager getEntityManager()
+    {
+        return primaryEntityManager().getObject().createEntityManager();
     }
 
 }

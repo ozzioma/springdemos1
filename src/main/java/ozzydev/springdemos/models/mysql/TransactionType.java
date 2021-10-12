@@ -4,3 +4,5 @@ public enum TransactionType
 {
     SALE, PURCHASE, OTHER
 }
+
+

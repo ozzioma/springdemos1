@@ -10,6 +10,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ozzydev.springdemos.models.mysql.CustomerType;
 import ozzydev.springdemos.models.mysql.DemoCustomer;
 import ozzydev.springdemos.models.postgres.Product;
 import ozzydev.springdemos.models.postgres.ProductCategory;
@@ -19,7 +20,8 @@ import ozzydev.springdemos.repos.mysql.TxnRepo;
 import ozzydev.springdemos.repos.postgres.ProductCategoryRepo;
 import ozzydev.springdemos.repos.postgres.ProductRepo;
 
-import javax.sql.DataSource;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @SpringBootApplication
@@ -27,8 +29,8 @@ import javax.sql.DataSource;
 public class SpringApp implements CommandLineRunner
 {
 
-//    @Autowired
-//    DataSource dataSource;
+    //    @Autowired
+    //    DataSource dataSource;
 
     @Autowired
     private CustomerRepo customerRepo;
@@ -46,7 +48,7 @@ public class SpringApp implements CommandLineRunner
     private ProductRepo productRepo;
 
     @Autowired
-    private ServiceDemo serviceDemo;
+    private QueryDemo1 queryDemo1;
 
     public static void main(String[] args)
     {
@@ -65,12 +67,13 @@ public class SpringApp implements CommandLineRunner
         //System.out.println("DATASOURCE = " + newds.getMaximumPoolSize());
 
         //LoadCustomers();
-
         //LoadProducts();
 
         //testQueries();
         //serviceDemo.testQueries();
-        serviceDemo.testQueries2();
+        //serviceDemo.testQueries2();
+        //queryDemo1.testQueries3();
+        queryDemo1.testQueries4();
 
 
     }
@@ -94,10 +97,10 @@ public class SpringApp implements CommandLineRunner
             System.out.println("total customers found->" + data.size());
             data.forEach(customer -> System.out.println(gson.toJson(customer)));
             //data.forEach(customer -> System.out.println(customer.toString()));
-//            for (var customer : data)
-//            {
-//                System.out.println(customer);
-//            }
+            //            for (var customer : data)
+            //            {
+            //                System.out.println(customer);
+            //            }
         }
 
         //Iterable<DemoCustomer> customers= customerRepo.findAll();
@@ -119,7 +122,7 @@ public class SpringApp implements CommandLineRunner
             return;
         }
 
-        for (int count = 1; count < 100; count++)
+        for (int count = 0; count <= 200; count++)
         {
             DemoCustomer customer = new DemoCustomer();
             customer.setAddress(faker.address().fullAddress());
@@ -127,7 +130,22 @@ public class SpringApp implements CommandLineRunner
             customer.setPhone(faker.phoneNumber().phoneNumber());
             customer.setFirstName(faker.name().firstName());
             customer.setLastName(faker.name().lastName());
+            customer.setIsRegistrationCompleted(faker.random().nextBoolean());
 
+            customer.setCustomerType(faker.options().option(CustomerType.class));
+            customer.setDob(LocalDate.of(
+                    faker.random().nextInt(1960, 2010),
+                    faker.random().nextInt(1, 12),
+                    faker.random().nextInt(1, 28)));
+
+            customer.setRegistrationDate(LocalDateTime.of(
+                    faker.random().nextInt(2000, 2020),
+                    faker.random().nextInt(1, 12),
+                    faker.random().nextInt(1, 28),
+                    faker.random().nextInt(0, 23),
+                    faker.random().nextInt(0, 59)));
+
+            //faker.date().past(20, TimeUnit.DAYS)
             customerRepo.save(customer);
         }
 

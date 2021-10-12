@@ -17,6 +17,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +26,8 @@ import java.util.Map;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "ozzydev.springdemos.repos.postgres",
-        entityManagerFactoryRef = "secondaryEntityManager",
+        entityManagerFactoryRef = "secondaryEntityManagerFactoryBean",
+        //entityManagerFactoryRef = "secondaryEmf",
         transactionManagerRef = "secondaryTransactionManager")
 public class SecondaryDbConfig
 {
@@ -50,7 +53,7 @@ public class SecondaryDbConfig
 
     @Bean
     //@Primary
-    public LocalContainerEntityManagerFactoryBean secondaryEntityManager()
+    public LocalContainerEntityManagerFactoryBean secondaryEntityManagerFactoryBean()
     {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(secondaryDataSource());
@@ -74,8 +77,23 @@ public class SecondaryDbConfig
     public PlatformTransactionManager secondaryTransactionManager()
     {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(secondaryEntityManager().getObject());
+        transactionManager.setEntityManagerFactory(secondaryEntityManagerFactoryBean().getObject());
         return transactionManager;
+    }
+
+
+    @Bean(name = "secondaryEmf")
+    @Qualifier("secondaryEmf")
+    public EntityManagerFactory secondaryEntityManagerFactory()
+    {
+        return secondaryEntityManagerFactoryBean().getObject();
+    }
+
+    @Bean(name = "secondaryEm")
+    @Qualifier("secondaryEm")
+    public EntityManager secondaryEntityManager()
+    {
+        return secondaryEntityManagerFactory().createEntityManager();
     }
 
 }

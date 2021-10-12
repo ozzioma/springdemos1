@@ -4,11 +4,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.support.JpaEntityInformation;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -20,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public interface CustomSpecificationHandler<T> extends JpaSpecificationExecutor<T>
+public interface JpaQueryFilterHandler<T> extends JpaSpecificationExecutor<T>
 {
 
     public default List<T> findAll(List<QueryFilter> filters)
@@ -83,6 +79,7 @@ public interface CustomSpecificationHandler<T> extends JpaSpecificationExecutor<
 
             specification = specification.or(createSpecification(input));
         }
+
         return specification;
     }
 
@@ -205,12 +202,12 @@ public interface CustomSpecificationHandler<T> extends JpaSpecificationExecutor<
                         criteriaBuilder.notLike(root.get(input.getField()),
                                 "%" + input.getValues().get(0).toString() + "%");
 
-            case STARTSWITH:
+            case STARTS_WITH:
                 return (root, query, criteriaBuilder) ->
                         criteriaBuilder.like(root.get(input.getField()),
                                 "%" + input.getValues().get(0).toString());
 
-            case ENDSWITH:
+            case ENDS_WITH:
                 return (root, query, criteriaBuilder) ->
                         criteriaBuilder.like(root.get(input.getField()),
                                 input.getValues().get(0).toString() + "%");
@@ -296,7 +293,7 @@ public interface CustomSpecificationHandler<T> extends JpaSpecificationExecutor<
         }
         else if (fieldType.isAssignableFrom(Long.class))
         {
-            System.out.println("Long value found->" + value.toString());
+            //System.out.println("Long value found->" + value.toString());
             return Long.valueOf(value.toString());
         }
         else if (fieldType.isAssignableFrom(Short.class))

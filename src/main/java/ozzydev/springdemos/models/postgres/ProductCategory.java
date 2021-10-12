@@ -1,15 +1,20 @@
 package ozzydev.springdemos.models.postgres;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.Where;
+import ozzydev.springdemos.config.GsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
-@Entity
+@GsonIgnore
 @Data
+@FieldNameConstants
+@Entity
 @Table(name = "productcategory")
 //@Where(clause = "address like '%MD%'")
 public class ProductCategory
@@ -28,6 +33,8 @@ public class ProductCategory
     @Column(name = "description", length = 255)
     private String description;
 
+    @JsonIgnore
+    @GsonIgnore
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Collection<Product> products;
 

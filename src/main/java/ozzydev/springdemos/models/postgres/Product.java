@@ -1,15 +1,19 @@
 package ozzydev.springdemos.models.postgres;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.Where;
+import ozzydev.springdemos.config.GsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
-@Entity
 @Data
+@FieldNameConstants
+@Entity
 @Table(name = "product")
 public class Product
 {
@@ -43,7 +47,10 @@ public class Product
     @Column(name = "categoryId")
     private Long categoryId;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = false, fetch = FetchType.LAZY)
+    @JsonIgnore
+    //@GsonIgnore
+    //@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.ALL}, optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryId", insertable = false, updatable = false)
     private ProductCategory category;
 }
