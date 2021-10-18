@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import ozzydev.springdemos.config.GsonExclusionStrategy;
@@ -218,7 +219,8 @@ public class QueryDemo1
         logger.info("local date2 param value->" + date2);
         logger.info("local date2 param stringvalue->" + date2.toString());
 
-        QueryFilter dobFilter1 = QueryFilter.builder().field(DemoCustomer.Fields.dob)
+        var dobFilter1 = where("dob").isGreaterThan(LocalDate.now().minusYears(44));
+        QueryFilter dobFilter11 = QueryFilter.builder().field(DemoCustomer.Fields.dob)
                 .operator(QueryOperator.GT)
                 .values(List.of(date2)).build();
 
@@ -244,39 +246,40 @@ public class QueryDemo1
         //var data = customerRepo2.findAll();
         var data = customerRepo2
                 .where(emailFilter, idFilter2)
-                .or(idFilter, emailFilter2)
-                .and(typeFilter1, dobFilter1)
+                //.or(idFilter, emailFilter2)
+                //.and(typeFilter1, dobFilter1)
+                .or(typeFilter1, dobFilter1)
                 .findAll();
 
         var dd = where("dob").isGreaterThan(date1);
-        var data2 = customerRepo2
-                .findAll(
-                        col("dob").isGreaterThan(date1),
-                        col("dob").isGreaterThan(date1),
-                        col("dob").isGreaterThan(date1),
-                        col("dob").isGreaterThan(date1)
-                        );
-
-        var data3 = customerRepo2
-                .where(
-                        col("dob").isGreaterThan(date1),
-                        col("dob").isGreaterThan(date1),
-                        col("dob").isGreaterThan(date1),
-                        col("dob").isGreaterThan(date1)
-                      )
-                .and(
-                        col("dob").isGreaterThan(date1),
-                        col("dob").isGreaterThan(date1),
-                        col("dob").isGreaterThan(date1),
-                        col("dob").isGreaterThan(date1)
-                    )
-                .or(
-                        col("dob").isGreaterThan(date1),
-                        col("dob").isGreaterThan(date1),
-                        col("dob").isGreaterThan(date1),
-                        col("dob").isGreaterThan(date1)
-                   )
-                .findAll();
+        //        var data2 = customerRepo2
+        //                .findAll(
+        //                        col("dob").isGreaterThan(date1),
+        //                        col("dob").isGreaterThan(date1),
+        //                        col("dob").isGreaterThan(date1),
+        //                        col("dob").isGreaterThan(date1)
+        //                        );
+        //
+        //        var data3 = customerRepo2
+        //                .where(
+        //                        col("dob").isGreaterThan(date1),
+        //                        col("dob").isGreaterThan(date1),
+        //                        col("dob").isGreaterThan(date1),
+        //                        col("dob").isGreaterThan(date1)
+        //                      )
+        //                .and(
+        //                        col("dob").isGreaterThan(date1),
+        //                        col("dob").isGreaterThan(date1),
+        //                        col("dob").isGreaterThan(date1),
+        //                        col("dob").isGreaterThan(date1)
+        //                    )
+        //                .or(
+        //                        col("dob").isGreaterThan(date1),
+        //                        col("dob").isGreaterThan(date1),
+        //                        col("dob").isGreaterThan(date1),
+        //                        col("dob").isGreaterThan(date1)
+        //                   )
+        //                .findAll();
 
         if (data.isEmpty())
         {
@@ -297,7 +300,7 @@ public class QueryDemo1
     }
 
 
-    @Transactional
+    //@Transactional(propagation = Propagation.REQUIRED)
     public void testQueries4()
     {
         Gson gson;// = new Gson();
@@ -309,6 +312,21 @@ public class QueryDemo1
         //                col(Product.Fields.code).like("37")
         //               // col("name").like("Coat")
         //                                       );
+
+        logger.info("table name->" + customerRepo2.getTableName());
+        logger.info("entity name->" + customerRepo2.getEntityName());
+
+        var prod1 = productRepo2.findById(444L);
+        var prod2 = productRepo2.findById(44L);
+
+        var prodExists = productRepo2.existsById(444L);
+        var prodExists2 = productRepo2.existsById(44L);
+
+        logger.info("prod 1 exists->" + prod1.isPresent());
+        logger.info("prod 2 exists->" + prod2.isPresent());
+
+        logger.info("exists check 1->" + prodExists);
+        logger.info("exists check 2->" + prodExists2);
 
         var data = productRepo2.orFindAll(
                 col(Product.Fields.code).like("37"),

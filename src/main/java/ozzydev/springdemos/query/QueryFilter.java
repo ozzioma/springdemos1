@@ -162,7 +162,7 @@ public class QueryFilter //<T>
 
         public QueryFilter isNotLessThan(final Object value)
         {
-            this.operator = QueryOperator.LT;
+            this.operator = QueryOperator.NLT;
             this.values = List.of(value);
             return build();
         }
@@ -176,7 +176,7 @@ public class QueryFilter //<T>
 
         public QueryFilter isNotLessThanOrEquals(final Object value)
         {
-            this.operator = QueryOperator.LTE;
+            this.operator = QueryOperator.NLTE;
             this.values = List.of(value);
             return build();
         }

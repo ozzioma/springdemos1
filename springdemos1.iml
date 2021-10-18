@@ -9,6 +9,7 @@
           <factory-entry name="entityManagerFactory" />
           <factory-entry name="primaryEntityManager" />
           <factory-entry name="secondaryEntityManager" />
+          <factory-entry name="secondaryEntityManagerFactoryBean" />
           <factory-entry name="springdemos1" />
         </datasource-mapping>
         <naming-strategy-map />

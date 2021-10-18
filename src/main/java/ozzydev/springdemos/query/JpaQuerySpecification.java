@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
+
+@FunctionalInterface
 public interface JpaQuerySpecification<T> extends Serializable
 {
 
@@ -35,17 +37,17 @@ public interface JpaQuerySpecification<T> extends Serializable
 }
 
 
-class SpecDemo
-{
-
-    void test1()
-    {
-        JpaQuerySpecification<DemoCustomer> spec1 = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
-        JpaQuerySpecification<DemoCustomer> spec2 = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
-        JpaQuerySpecification<DemoCustomer> spec3 = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
-        JpaQuerySpecification<DemoCustomer> spec4 = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
-        JpaQuerySpecification<DemoCustomer> spec5 = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
-
-        //var specs=nameLike.an
-    }
-}
+//class SpecDemo
+//{
+//
+//    void test1()
+//    {
+//        JpaQuerySpecification<DemoCustomer> spec1 = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
+//        JpaQuerySpecification<DemoCustomer> spec2 = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
+//        JpaQuerySpecification<DemoCustomer> spec3 = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
+//        JpaQuerySpecification<DemoCustomer> spec4 = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
+//        JpaQuerySpecification<DemoCustomer> spec5 = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
+//
+//        //var specs=nameLike.an
+//    }
+//}

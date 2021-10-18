@@ -50,7 +50,7 @@ public class Product
     @JsonIgnore
     //@GsonIgnore
     //@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = false, fetch = FetchType.LAZY)
-    @ManyToOne(cascade = {CascadeType.ALL}, optional = true, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.MERGE}, optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryId", insertable = false, updatable = false)
     private ProductCategory category;
 }

@@ -83,7 +83,7 @@ public class SecondaryDbConfig
 
 
     @Bean(name = "secondaryEmf")
-    @Qualifier("secondaryEmf")
+    //@Qualifier("secondaryEmf")
     public EntityManagerFactory secondaryEntityManagerFactory()
     {
         return secondaryEntityManagerFactoryBean().getObject();

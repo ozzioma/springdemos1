@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.Where;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -55,6 +56,7 @@ public class DemoCustomer
 
     //@NotNull
     @Column(name = "dob")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dob;
 
     //@NotNull

@@ -2,15 +2,10 @@ package ozzydev.springdemos.query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ozzydev.springdemos.common.Tuple2;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import javax.persistence.criteria.*;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.FormatStyle;
@@ -70,32 +65,212 @@ public class JpaQueryResolver<T>
 
             case EQ:
             case EQUAL:
-                return (root, query, criteriaBuilder) ->
-                        criteriaBuilder.equal(root.get(entityFieldName),
-                                castToEntityFieldType(root.get(entityFieldName).getJavaType(),
-                                        firstValue));
+                return new JpaQuerySpecification<T>()
+                {
+                    @Override
+                    public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) throws UnsupportedOperationException
+                    {
+                        var fieldClass = root.get(entityFieldName).getJavaType();
+                        if (fieldClass.isAssignableFrom(LocalDate.class))
+                        {
+                            var tuple = getLocalDateBindInfo(root, input);
+                            return criteriaBuilder.equal(tuple.item1, tuple.item2);
+                        }
+                        else if (fieldClass.isAssignableFrom(LocalDateTime.class))
+                        {
+                            var tuple = getLocalDateTimeBindInfo(root, input);
+                            return criteriaBuilder.equal(tuple.item1, tuple.item2);
+                        }
+                        else if (fieldClass.isAssignableFrom(LocalTime.class))
+                        {
+                            var tuple = getLocalTimeBindInfo(root, input);
+                            return criteriaBuilder.equal(tuple.item1, tuple.item2);
+                        }
+                        else if (fieldClass.isAssignableFrom(ZonedDateTime.class))
+                        {
+                            var tuple = getZonedDateTimeBindInfo(root, input);
+                            return criteriaBuilder.equal(tuple.item1, tuple.item2);
+                        }
+                        else if (fieldClass.isAssignableFrom(OffsetDateTime.class))
+                        {
+                            var tuple = getOffsetDateTimeBindInfo(root, input);
+                            return criteriaBuilder.equal(tuple.item1, tuple.item2);
+                        }
+                        else if (fieldClass.isAssignableFrom(OffsetTime.class))
+                        {
+                            var tuple = getOffsetTimeBindInfo(root, input);
+                            return criteriaBuilder.equal(tuple.item1, tuple.item2);
+                        }
+                        else
+                        {
+                            return criteriaBuilder.equal(
+                                    root.get(entityFieldName),
+                                    castToEntityFieldType(root.get(entityFieldName).getJavaType(),
+                                            firstValue));
+                        }
+
+                    }
+                };
+            //                return (root, query, criteriaBuilder) ->
+            //                        criteriaBuilder.equal(root.get(entityFieldName),
+            //                                castToEntityFieldType(root.get(entityFieldName).getJavaType(),
+            //                                        firstValue));
 
             case NE:
             case NOT_EQUAL:
-                return (root, query, criteriaBuilder) ->
-                        criteriaBuilder.notEqual(root.get(entityFieldName),
-                                castToEntityFieldType(root.get(entityFieldName).getJavaType(),
-                                        firstValue));
+                return new JpaQuerySpecification<T>()
+                {
+                    @Override
+                    public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) throws UnsupportedOperationException
+                    {
+                        var fieldClass = root.get(entityFieldName).getJavaType();
+                        if (fieldClass.isAssignableFrom(LocalDate.class))
+                        {
+                            var tuple = getLocalDateBindInfo(root, input);
+                            return criteriaBuilder.equal(tuple.item1, tuple.item2).not();
+                        }
+                        else if (fieldClass.isAssignableFrom(LocalDateTime.class))
+                        {
+                            var tuple = getLocalDateTimeBindInfo(root, input);
+                            return criteriaBuilder.equal(tuple.item1, tuple.item2).not();
+                        }
+                        else if (fieldClass.isAssignableFrom(LocalTime.class))
+                        {
+                            var tuple = getLocalTimeBindInfo(root, input);
+                            return criteriaBuilder.equal(tuple.item1, tuple.item2).not();
+                        }
+                        else if (fieldClass.isAssignableFrom(ZonedDateTime.class))
+                        {
+                            var tuple = getZonedDateTimeBindInfo(root, input);
+                            return criteriaBuilder.equal(tuple.item1, tuple.item2).not();
+                        }
+                        else if (fieldClass.isAssignableFrom(OffsetDateTime.class))
+                        {
+                            var tuple = getOffsetDateTimeBindInfo(root, input);
+                            return criteriaBuilder.equal(tuple.item1, tuple.item2).not();
+                        }
+                        else if (fieldClass.isAssignableFrom(OffsetTime.class))
+                        {
+                            var tuple = getOffsetTimeBindInfo(root, input);
+                            return criteriaBuilder.equal(tuple.item1, tuple.item2).not();
+                        }
+                        else
+                        {
+                            return criteriaBuilder.equal(
+                                    root.get(entityFieldName),
+                                    castToEntityFieldType(root.get(entityFieldName).getJavaType(),
+                                            firstValue)).not();
+                        }
+
+                    }
+                };
+
+//                return (root, query, criteriaBuilder) ->
+//                        criteriaBuilder.notEqual(root.get(entityFieldName),
+//                                castToEntityFieldType(root.get(entityFieldName).getJavaType(),
+//                                        firstValue));
 
 
             case GT:
             case GREATER_THAN:
-                return (root, query, criteriaBuilder) ->
-                        criteriaBuilder.greaterThan(root.get(entityFieldName),
-                                castToEntityFieldType(root.get(entityFieldName).getJavaType(),
-                                        firstValue).toString());
+                return new JpaQuerySpecification<T>()
+                {
+                    @Override
+                    public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) throws UnsupportedOperationException
+                    {
+                        var fieldClass = root.get(entityFieldName).getJavaType();
+                        if (fieldClass.isAssignableFrom(LocalDate.class))
+                        {
+                            var tuple = getLocalDateBindInfo(root, input);
+                            return criteriaBuilder.greaterThan(tuple.item1, tuple.item2);
+                        }
+                        else if (fieldClass.isAssignableFrom(LocalDateTime.class))
+                        {
+                            var tuple = getLocalDateTimeBindInfo(root, input);
+                            return criteriaBuilder.greaterThan(tuple.item1, tuple.item2);
+                        }
+                        else if (fieldClass.isAssignableFrom(LocalTime.class))
+                        {
+                            var tuple = getLocalTimeBindInfo(root, input);
+                            return criteriaBuilder.greaterThan(tuple.item1, tuple.item2);
+                        }
+                        else if (fieldClass.isAssignableFrom(ZonedDateTime.class))
+                        {
+                            var tuple = getZonedDateTimeBindInfo(root, input);
+                            return criteriaBuilder.greaterThan(tuple.item1, tuple.item2);
+                        }
+                        else if (fieldClass.isAssignableFrom(OffsetDateTime.class))
+                        {
+                            var tuple = getOffsetDateTimeBindInfo(root, input);
+                            return criteriaBuilder.greaterThan(tuple.item1, tuple.item2);
+                        }
+                        else if (fieldClass.isAssignableFrom(OffsetTime.class))
+                        {
+                            var tuple = getOffsetTimeBindInfo(root, input);
+                            return criteriaBuilder.greaterThan(tuple.item1, tuple.item2);
+                        }
+                        else
+                        {
+                            return criteriaBuilder.greaterThan(root.get(entityFieldName),
+                                    castToEntityFieldType(root.get(entityFieldName).getJavaType(),
+                                            firstValue).toString());
+                        }
+
+                    }
+                };
 
             case NGT:
             case NOT_GREATER_THAN:
-                return (root, query, criteriaBuilder) ->
-                        criteriaBuilder.greaterThan(root.get(entityFieldName),
-                                castToEntityFieldType(root.get(entityFieldName).getJavaType(),
-                                        firstValue).toString()).not();
+
+                return new JpaQuerySpecification<T>()
+                {
+                    @Override
+                    public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) throws UnsupportedOperationException
+                    {
+                        var fieldClass = root.get(entityFieldName).getJavaType();
+                        if (fieldClass.isAssignableFrom(LocalDate.class))
+                        {
+                            var tuple = getLocalDateBindInfo(root, input);
+                            return criteriaBuilder.greaterThan(tuple.item1, tuple.item2).not();
+                        }
+                        else if (fieldClass.isAssignableFrom(LocalDateTime.class))
+                        {
+                            var tuple = getLocalDateTimeBindInfo(root, input);
+                            return criteriaBuilder.greaterThan(tuple.item1, tuple.item2).not();
+                        }
+                        else if (fieldClass.isAssignableFrom(LocalTime.class))
+                        {
+                            var tuple = getLocalTimeBindInfo(root, input);
+                            return criteriaBuilder.greaterThan(tuple.item1, tuple.item2).not();
+                        }
+                        else if (fieldClass.isAssignableFrom(ZonedDateTime.class))
+                        {
+                            var tuple = getZonedDateTimeBindInfo(root, input);
+                            return criteriaBuilder.greaterThan(tuple.item1, tuple.item2).not();
+                        }
+                        else if (fieldClass.isAssignableFrom(OffsetDateTime.class))
+                        {
+                            var tuple = getOffsetDateTimeBindInfo(root, input);
+                            return criteriaBuilder.greaterThan(tuple.item1, tuple.item2).not();
+                        }
+                        else if (fieldClass.isAssignableFrom(OffsetTime.class))
+                        {
+                            var tuple = getOffsetTimeBindInfo(root, input);
+                            return criteriaBuilder.greaterThan(tuple.item1, tuple.item2).not();
+                        }
+                        else
+                        {
+                            return criteriaBuilder.greaterThan(root.get(entityFieldName),
+                                    castToEntityFieldType(root.get(entityFieldName).getJavaType(),
+                                            firstValue).toString()).not();
+                        }
+
+                    }
+                };
+//                return (root, query, criteriaBuilder) ->
+//                        criteriaBuilder.greaterThan(root.get(entityFieldName),
+//                                castToEntityFieldType(root.get(entityFieldName).getJavaType(),
+//                                        firstValue).toString()).not();
 
 
             case GTE:
@@ -219,6 +394,106 @@ public class JpaQueryResolver<T>
     }
 
 
+    private static Tuple2<Path<LocalDate>, LocalDate> getLocalDateBindInfo(Root root, QueryFilter input)
+    {
+
+        final var entityFieldName = input.getField();
+        final var firstValue = input.getValues().size() > 0 ? input.getValues().get(0) : null;
+        final var secondValue = input.getValues().size() > 1 ? input.getValues().get(1) : null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE.withResolverStyle(ResolverStyle.SMART);
+
+        var path = root.<LocalDate>get(entityFieldName);
+        var bindValue = LocalDate.parse(firstValue.toString(), formatter);
+
+        Tuple2<Path<LocalDate>, LocalDate> bindingInfo = new Tuple2<>(path, bindValue);
+
+        return bindingInfo;
+    }
+
+    private static Tuple2<Path<LocalDateTime>, LocalDateTime> getLocalDateTimeBindInfo(Root root, QueryFilter input)
+    {
+
+        final var entityFieldName = input.getField();
+        final var firstValue = input.getValues().size() > 0 ? input.getValues().get(0) : null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withResolverStyle(ResolverStyle.SMART);
+
+        var path = root.<LocalDateTime>get(entityFieldName);
+        var bindValue = LocalDateTime.parse(firstValue.toString(), formatter);
+
+        Tuple2<Path<LocalDateTime>, LocalDateTime> bindingInfo = new Tuple2<>(path, bindValue);
+
+        return bindingInfo;
+    }
+
+    private static Tuple2<Path<LocalTime>, LocalTime> getLocalTimeBindInfo(Root root, QueryFilter input)
+    {
+
+        final var entityFieldName = input.getField();
+        final var firstValue = input.getValues().size() > 0 ? input.getValues().get(0) : null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_TIME.withResolverStyle(ResolverStyle.SMART);
+
+        var path = root.<LocalTime>get(entityFieldName);
+        var bindValue = LocalTime.parse(firstValue.toString(), formatter);
+
+        Tuple2<Path<LocalTime>, LocalTime> bindingInfo = new Tuple2<>(path, bindValue);
+
+        return bindingInfo;
+    }
+
+
+    private static Tuple2<Path<ZonedDateTime>, ZonedDateTime> getZonedDateTimeBindInfo(Root root, QueryFilter input)
+    {
+
+        final var entityFieldName = input.getField();
+        final var firstValue = input.getValues().size() > 0 ? input.getValues().get(0) : null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME.withResolverStyle(ResolverStyle.SMART);
+
+        var path = root.<ZonedDateTime>get(entityFieldName);
+        var bindValue = ZonedDateTime.parse(firstValue.toString(), formatter);
+
+        Tuple2<Path<ZonedDateTime>, ZonedDateTime> bindingInfo = new Tuple2<>(path, bindValue);
+
+        return bindingInfo;
+    }
+
+    private static Tuple2<Path<OffsetDateTime>, OffsetDateTime> getOffsetDateTimeBindInfo(Root root, QueryFilter input)
+    {
+
+        final var entityFieldName = input.getField();
+        final var firstValue = input.getValues().size() > 0 ? input.getValues().get(0) : null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withResolverStyle(ResolverStyle.SMART);
+
+        var path = root.<OffsetDateTime>get(entityFieldName);
+        var bindValue = OffsetDateTime.parse(firstValue.toString(), formatter);
+
+        Tuple2<Path<OffsetDateTime>, OffsetDateTime> bindingInfo = new Tuple2<>(path, bindValue);
+
+        return bindingInfo;
+    }
+
+
+    private static Tuple2<Path<OffsetTime>, OffsetTime> getOffsetTimeBindInfo(Root root, QueryFilter input)
+    {
+
+        final var entityFieldName = input.getField();
+        final var firstValue = input.getValues().size() > 0 ? input.getValues().get(0) : null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_TIME.withResolverStyle(ResolverStyle.SMART);
+
+        var path = root.<OffsetTime>get(entityFieldName);
+        var bindValue = OffsetTime.parse(firstValue.toString(), formatter);
+
+        Tuple2<Path<OffsetTime>, OffsetTime> bindingInfo = new Tuple2<>(path, bindValue);
+
+        return bindingInfo;
+    }
+
+
     private static Object castToEntityFieldType(Class fieldType, Object value)
     {
         if (fieldType.isAssignableFrom(Double.class))
@@ -250,9 +525,9 @@ public class JpaQueryResolver<T>
         {
             //var localDate = (LocalDate) value;
 
-            var strDate = "24-11-1983";
+            var strDate = "24/11/1983";
             var df1 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            var strDate2 = "1983-11-24";
+            var strDate2 = "1983/11/24";
             var date1 = LocalDate.parse(strDate, df1);
             logger.info("date1 value->" + date1);
             logger.info("date1 string value->" + date1.toString());
@@ -293,12 +568,32 @@ public class JpaQueryResolver<T>
         }
         else if (fieldType.isAssignableFrom(LocalDateTime.class))
         {
-            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            DateTimeFormatter format = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withResolverStyle(ResolverStyle.SMART);
             return LocalDateTime.parse(value.toString(), format);
         }
         else if (fieldType.isAssignableFrom(LocalTime.class))
         {
-            return LocalDate.parse(value.toString());
+            DateTimeFormatter format = DateTimeFormatter.ISO_LOCAL_TIME.withResolverStyle(ResolverStyle.SMART);
+            return LocalTime.parse(value.toString(), format);
+        }
+        else if (fieldType.isAssignableFrom(OffsetTime.class))
+        {
+            DateTimeFormatter format = DateTimeFormatter.ISO_OFFSET_TIME.withResolverStyle(ResolverStyle.SMART);
+            return OffsetTime.parse(value.toString(), format);
+        }
+        else if (fieldType.isAssignableFrom(OffsetDateTime.class))
+        {
+            DateTimeFormatter format = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withResolverStyle(ResolverStyle.SMART);
+            return OffsetDateTime.parse(value.toString(), format);
+        }
+        else if (fieldType.isAssignableFrom(ZonedDateTime.class))
+        {
+            DateTimeFormatter format = DateTimeFormatter.ISO_ZONED_DATE_TIME.withResolverStyle(ResolverStyle.SMART);
+            return ZonedDateTime.parse(value.toString(), format);
+        }
+        else if (fieldType.isAssignableFrom(Instant.class))
+        {
+            return Instant.parse(value.toString());
         }
         else if (fieldType.isAssignableFrom(Date.class))
         {

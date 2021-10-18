@@ -46,3 +46,5 @@ public class NotSpecification<T> extends ComposableSpecification<T>
     }
 
 }
+
+

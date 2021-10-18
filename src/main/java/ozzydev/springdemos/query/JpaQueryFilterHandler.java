@@ -19,6 +19,8 @@ import java.util.List;
 public interface JpaQueryFilterHandler<T> extends JpaSpecificationExecutor<T>
 {
 
+
+
     public default List<T> findAll(List<QueryFilter> filters)
     {
         if (filters.size() > 0)
