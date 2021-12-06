@@ -12,6 +12,7 @@ import javax.persistence.metamodel.IdentifiableType;
 import javax.persistence.metamodel.Metamodel;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.transaction.Transactional;
+import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -81,11 +82,9 @@ public abstract class JpaCrudRepository<T, ID> implements BaseJpaRepository<T, I
         EntityType<T> entityType = meta.entity(entityClass);
 
         //Check whether @Table annotation is present on the class.
-        Table t = entityClass.getAnnotation(Table.class);
+        Table table = entityClass.getAnnotation(Table.class);
 
-        String tableName = (t == null)
-                ? entityType.getName().toUpperCase()
-                : t.name();
+        String tableName = (table == null) ? entityType.getName().toUpperCase() : table.name();
         return tableName;
     }
 
@@ -96,11 +95,9 @@ public abstract class JpaCrudRepository<T, ID> implements BaseJpaRepository<T, I
         EntityType<T> entityType = meta.entity(entityClass);
 
         //Check whether @Table annotation is present on the class.
-        Table t = entityClass.getAnnotation(Table.class);
+        Table table = entityClass.getAnnotation(Table.class);
 
-        String tableName = (t == null)
-                ? entityType.getName().toUpperCase()
-                : t.name();
+        String tableName = (table == null) ? entityType.getName().toUpperCase() : table.name();
         return tableName;
     }
 
@@ -113,9 +110,9 @@ public abstract class JpaCrudRepository<T, ID> implements BaseJpaRepository<T, I
         EntityType<T> entityType = meta.entity(entityClass);
 
         //Check whether @Table annotation is present on the class.
-        Table t = entityClass.getAnnotation(Table.class);
+        Table table = entityClass.getAnnotation(Table.class);
 
-        String tableName = (t == null) ? entityType.getName().toUpperCase() : t.name();
+        String tableName = (table == null) ? entityType.getName().toUpperCase() : table.name();
         return tableName;
     }
 
@@ -176,18 +173,35 @@ public abstract class JpaCrudRepository<T, ID> implements BaseJpaRepository<T, I
         return idSelectPath;
     }
 
-    private List<T> executeQuery(CriteriaQuery<T> criteriaQuery)
+    //    private TypedQuery<T> composeQuery(CriteriaQuery<T> criteriaQuery,LockModeType lockModeType)
+    //    {
+    //
+    //    }
+
+    private List<T> executeSelectMany(CriteriaQuery<T> criteriaQuery)
     {
-        LockModeType lockModeType = LockModeType.PESSIMISTIC_READ;
+        LockModeType lockModeType = LockModeType.NONE;
 
         var rows = transactionScope.executeAndReturn(entityManager ->
         {
-            var data = entityManager.createQuery(criteriaQuery).getResultList();
+            var data = entityManager.createQuery(criteriaQuery).setLockMode(lockModeType).getResultList();
             return data;
         });
 
         return rows;
+    }
 
+
+    private List<T> executeSelectMany(CriteriaQuery<T> criteriaQuery, LockModeType lockModeType)
+    {
+
+        var rows = transactionScope.executeAndReturn(entityManager ->
+        {
+            var data = entityManager.createQuery(criteriaQuery).setLockMode(lockModeType).getResultList();
+            return data;
+        });
+
+        return rows;
     }
 
     @Override
@@ -213,6 +227,13 @@ public abstract class JpaCrudRepository<T, ID> implements BaseJpaRepository<T, I
 
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
+
+    @Override
+    public Iterable<T> findAll(Pageable pageable)
+    {
+        return null;
+    }
+
 
     @Override
     public List<T> findAll(QueryFilter... filters)
@@ -249,6 +270,13 @@ public abstract class JpaCrudRepository<T, ID> implements BaseJpaRepository<T, I
     }
 
     @Override
+    public List<T> findAll(Pageable pageable, QueryFilter... filters)
+    {
+        return null;
+    }
+
+
+    @Override
     public List<T> findAll(ComposableSpecification<T> specification)
     {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -264,6 +292,12 @@ public abstract class JpaCrudRepository<T, ID> implements BaseJpaRepository<T, I
         baseSpecification = specification;
 
         return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
+    @Override
+    public List<T> findAll(Pageable pageable, ComposableSpecification<T> specification)
+    {
+        return null;
     }
 
 
@@ -303,6 +337,13 @@ public abstract class JpaCrudRepository<T, ID> implements BaseJpaRepository<T, I
     }
 
 
+    @Override
+    public List<T> orFindAll(Pageable pageable, QueryFilter... filters)
+    {
+        return null;
+    }
+
+
     public JpaCrudRepository<T, ID> where(QueryFilter... filters)
     {
         if (baseSpecification != null)
@@ -332,6 +373,35 @@ public abstract class JpaCrudRepository<T, ID> implements BaseJpaRepository<T, I
         return this;
     }
 
+
+    public JpaCrudRepository<T, ID> orWhere(QueryFilter... filters)
+    {
+        if (baseSpecification != null)
+        {
+            throw new UnsupportedOperationException("base where expression has been set before");
+        }
+
+        List<ComposableSpecification<T>> specificationList = new ArrayList<>();
+
+        for (var filter : filters)
+        {
+            AndSpecification<T> specification = new AndSpecification<T>(filter);
+            specificationList.add(specification);
+        }
+
+        var baseSpec = specificationList.remove(0);
+        for (var spec : specificationList)
+        {
+            baseSpec = baseSpec.or(spec);
+        }
+
+        if (baseSpecification == null)
+        {
+            baseSpecification = baseSpec;
+        }
+
+        return this;
+    }
 
     public JpaCrudRepository<T, ID> and(QueryFilter... filters)
     {

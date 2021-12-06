@@ -7,6 +7,5 @@ import javax.persistence.EntityManager;
 public interface TransactionCallback<T, R>
 {
 
-    public R execute(T t);
-
+    R execute(T t);
 }

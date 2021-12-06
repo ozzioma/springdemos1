@@ -4,7 +4,7 @@ package ozzydev.springdemos.transaction;
 public interface TransactionVoidCallback<T>
 {
 
-    public void execute(T t);
+    void execute(T t);
 
 }
 

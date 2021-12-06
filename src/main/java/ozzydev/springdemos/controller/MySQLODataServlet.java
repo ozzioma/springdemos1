@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+@WebServlet(urlPatterns = "/odata/mysql/*", loadOnStartup = 1)
 public class MySQLODataServlet extends HttpServlet
 {
 
@@ -34,6 +36,8 @@ public class MySQLODataServlet extends HttpServlet
     @Autowired
     @Qualifier("primaryDS")
     private DataSource primaryDS;
+
+    private static final int BUFFER_SIZE = 10;
 
     @Override
     //@RequestMapping(method = {GET, POST, PATCH, DELETE})

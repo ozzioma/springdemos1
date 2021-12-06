@@ -125,11 +125,11 @@
         </dependency>
 
         <!-- HikariCP connection pool -->
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>2.6.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.zaxxer</groupId>-->
+<!--            <artifactId>HikariCP</artifactId>-->
+<!--            <version>2.6.0</version>-->
+<!--        </dependency>-->
 
 <!--        <dependency>-->
 <!--            <groupId>com.sap.olingo</groupId>-->
@@ -140,8 +140,23 @@
         <dependency>
             <groupId>com.sap.olingo</groupId>
             <artifactId>odata-jpa-processor</artifactId>
-            <version>0.3.9-SNAPSHOT</version>
+            <version>0.3.10-SNAPSHOT</version>
         </dependency>
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.teiid/teiid-spring-boot-starter &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.teiid</groupId>-->
+<!--            <artifactId>teiid-spring-boot-starter</artifactId>-->
+<!--            <version>1.7.2</version>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.teiid/spring-odata &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.teiid</groupId>-->
+<!--            <artifactId>spring-odata</artifactId>-->
+<!--            <version>1.7.2</version>-->
+<!--        </dependency>-->
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -163,16 +178,15 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <source>11</source>   <!-- maven.compiler.source  -->
-                    <target>11</target> <!-- maven.compiler.target -->
-                </configuration>
-            </plugin>
-            <!-- Package as an executable jar/war -->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <version>3.8.0</version>-->
+<!--                <configuration>-->
+<!--                    <source>11</source>   &lt;!&ndash; maven.compiler.source  &ndash;&gt;-->
+<!--                    <target>11</target> &lt;!&ndash; maven.compiler.target &ndash;&gt;-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

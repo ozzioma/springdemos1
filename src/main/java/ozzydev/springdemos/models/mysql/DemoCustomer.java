@@ -1,11 +1,15 @@
 package ozzydev.springdemos.models.mysql;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmEnumeration;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
+import ozzydev.springdemos.config.LocalDateConverter;
+import ozzydev.springdemos.config.LocalDateTimeConverter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -56,11 +60,16 @@ public class DemoCustomer
 
     //@NotNull
     @Column(name = "dob")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Convert(converter = LocalDateConverter.class)
+    //@DateTimeFormat(pattern = "dd-MM-yyyy")
+    //@JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate dob;
 
     //@NotNull
     @Column(name = "regDate")
+    @Convert(converter = LocalDateTimeConverter.class)
+    //@DateTimeFormat(pattern = "dd-MM-yyyy hh:mm:ss")
+    //@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime registrationDate;
 
     //@NotNull

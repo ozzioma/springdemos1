@@ -31,23 +31,8 @@ import java.time.LocalDateTime;
 public class SpringApp implements CommandLineRunner
 {
 
-    //    @Autowired
-    //    DataSource dataSource;
-
     @Autowired
-    private CustomerRepo customerRepo;
-
-    @Autowired
-    private CommitLogRepo logRepo;
-
-    @Autowired
-    private TxnRepo txnRepo;
-
-    @Autowired
-    private ProductCategoryRepo productCategoryRepo;
-
-    @Autowired
-    private ProductRepo productRepo;
+    private DataSeeder seeder;
 
     @Autowired
     private QueryDemo1 queryDemo1;
@@ -62,14 +47,10 @@ public class SpringApp implements CommandLineRunner
     public void run(String... args) throws Exception
     {
 
-        //System.out.println("DATASOURCE = " + dataSource);
 
-        // If you want to check the HikariDataSource settings
-        //HikariDataSource newds = (HikariDataSource)dataSource;
-        //System.out.println("DATASOURCE = " + newds.getMaximumPoolSize());
 
-        //LoadCustomers();
-        //LoadProducts();
+//        seeder.LoadCustomers();
+//        seeder.LoadProducts();
 
         //testQueries();
         //serviceDemo.testQueries();
@@ -80,129 +61,10 @@ public class SpringApp implements CommandLineRunner
 
     }
 
-    @Transactional
-    void testQueries()
-    {
-
-        Gson gson = new Gson();
-
-        Specification<DemoCustomer> nameLike =
-                (root, query, criteriaBuilder) ->
-                        criteriaBuilder.like(root.get("firstName"), "%De%");
-        var data = customerRepo.findAll(nameLike);
-        if (data.isEmpty())
-        {
-            System.out.println("no customers found");
-        }
-        else
-        {
-            System.out.println("total customers found->" + data.size());
-            data.forEach(customer -> System.out.println(gson.toJson(customer)));
-            //data.forEach(customer -> System.out.println(customer.toString()));
-            //            for (var customer : data)
-            //            {
-            //                System.out.println(customer);
-            //            }
-        }
-
-        //Iterable<DemoCustomer> customers= customerRepo.findAll();
-        //System.out.println(customers);
 
 
-        //Iterable<DemoCommitLog> logs= logRepo.findByProcessedFlag(false);
-        //System.out.println(logs);
-    }
 
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void LoadCustomers()
-    {
-        Faker faker = new Faker();
-
-        if (customerRepo.count() > 0)
-        {
-            return;
-        }
-
-        for (int count = 0; count <= 200; count++)
-        {
-            DemoCustomer customer = new DemoCustomer();
-            customer.setAddress(faker.address().fullAddress());
-            customer.setEmail(faker.internet().emailAddress());
-            customer.setPhone(faker.phoneNumber().phoneNumber());
-            customer.setFirstName(faker.name().firstName());
-            customer.setLastName(faker.name().lastName());
-            customer.setIsRegistrationCompleted(faker.random().nextBoolean());
-
-            customer.setCustomerType(faker.options().option(CustomerType.class));
-            customer.setDob(LocalDate.of(
-                    faker.random().nextInt(1960, 2010),
-                    faker.random().nextInt(1, 12),
-                    faker.random().nextInt(1, 28)));
-
-            customer.setRegistrationDate(LocalDateTime.of(
-                    faker.random().nextInt(2000, 2020),
-                    faker.random().nextInt(1, 12),
-                    faker.random().nextInt(1, 28),
-                    faker.random().nextInt(0, 23),
-                    faker.random().nextInt(0, 59)));
-
-            //faker.date().past(20, TimeUnit.DAYS)
-            customerRepo.save(customer);
-        }
-
-    }
-
-
-    @Transactional
-    void LoadProducts()
-    {
-        if (productCategoryRepo.count() > 0)
-        {
-            return;
-        }
-
-
-        Faker faker = new Faker();
-
-
-        for (int count = 0; count <= 10; count++)
-        {
-            String categoryName = faker.commerce().material();
-            var checkCatName = productCategoryRepo.existsByName(categoryName);
-            if (!checkCatName)
-            {
-
-                ProductCategory category = new ProductCategory();
-                category.setName(categoryName);
-                category.setDescription(faker.lorem().paragraph(1));
-
-                productCategoryRepo.save(category);
-
-                for (int count2 = 0; count2 <= 20; count2++)
-                {
-                    String productName = faker.commerce().productName();
-                    Boolean checkProdName = productRepo.existsByName((productName));
-
-                    if (!checkProdName)
-                    {
-                        Product product = new Product();
-                        product.setCategoryId(category.getId());
-                        product.setName(productName);
-                        product.setCode(faker.code().isbn10());
-                        product.setSalesPrice((double) faker.number().numberBetween(10, 55));
-                        product.setPurchasePrice((double) faker.number().numberBetween(5, 35));
-                        product.setDescription(faker.lorem().paragraph(1));
-
-                        productRepo.save(product);
-                    }
-
-                }
-
-            }
-
-        }
-
-    }
 }
+
+
 

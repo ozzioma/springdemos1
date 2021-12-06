@@ -46,8 +46,10 @@ public class ODataPagingFilter implements Filter
 
         MutableHttpRequest mutableHttpRequest = new MutableHttpRequest((HttpServletRequest) servletRequest);
 
-        if (!servletRequest.getParameterMap().containsKey("$top")
-                && !((HttpServletRequest) servletRequest).getPathInfo().contains("$metadata"))
+        if (
+                !servletRequest.getParameterMap().containsKey("$top")
+               // && !((HttpServletRequest) servletRequest).getPathInfo().contains("$metadata")
+        )
         {
 
             System.out.println("pagination filter parameter $top not found.");

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -48,6 +49,15 @@ public class PrimaryDbConfig
     public DataSource primaryDataSource()
     {
         return primaryDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
+    }
+
+    @Bean
+    //@Primary
+    //@Qualifier("primaryDS")
+    @ConfigurationProperties(prefix = "spring.datasource.customers")
+    public DataSource customers()
+    {
+        return DataSourceBuilder.create().build();
     }
 
     @Bean
@@ -95,4 +105,14 @@ public class PrimaryDbConfig
         return primaryEntityManager().getObject().createEntityManager();
     }
 
+
+//    private PagingProvider primaryPagingProvider() {
+//        final Map<String, Integer> pageSizes = new HashMap<>();
+//        pageSizes.put("Companies", 5);
+//        pageSizes.put("AdministrativeDivisions", 10);
+//
+//        return new PagingProvider(pageSizes, BUFFER_SIZE);
+//    }
+
 }
+

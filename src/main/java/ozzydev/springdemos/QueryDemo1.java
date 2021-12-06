@@ -328,19 +328,14 @@ public class QueryDemo1
         logger.info("exists check 1->" + prodExists);
         logger.info("exists check 2->" + prodExists2);
 
-        var data = productRepo2.orFindAll(
-                col(Product.Fields.code).like("37"),
-                col("name").like("Chair")
-                                         );
+        var data = productRepo2
+                .findAll(col(Product.Fields.code).like("37"),
+                        col("name").like("Chair"));
 
-        //        var data = productRepo2
-        //                .where(
-        //                        col(Product.Fields.code).like("37")
-        //                      )
-        //                .or(
-        //                        col("name").like("Chair")
-        //                   )
-        //                .findAll();
+//        var data2 = productRepo2
+//                .where(col(Product.Fields.code).like("37"))
+//                .or(col("name").like("Chair"))
+//                .findAll();
 
         if (data.isEmpty())
         {
