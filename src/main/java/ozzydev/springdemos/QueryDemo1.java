@@ -39,8 +39,9 @@ import static ozzydev.springdemos.query.QueryFilter.*;
 import static ozzydev.springdemos.query.JpaCrudRepository.*;
 
 @Service
-public class QueryDemo1
-{
+public class QueryDemo1 {
+
+    final static Logger logger = LoggerFactory.getLogger(QueryDemo1.class);
 
     @PersistenceContext(unitName = "primary")
     private EntityManager primaryEntityManager;
@@ -66,22 +67,17 @@ public class QueryDemo1
     @Autowired
     private ProductRepo2 productRepo2;
 
-    final static Logger logger = LoggerFactory.getLogger(QueryDemo1.class);
 
     @Transactional
-    public void testQueries()
-    {
+    public void testQueries() {
 
         Gson gson = new Gson();
 
         Specification<DemoCustomer> nameLike = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
         var data = customerRepo.findAll(nameLike);
-        if (data.isEmpty())
-        {
+        if (data.isEmpty()) {
             System.out.println("no customers found");
-        }
-        else
-        {
+        } else {
             //Session sessin = (Session)primaryEntityManager.unwrap(Session.class);
             //sessin.close();
 
@@ -98,8 +94,7 @@ public class QueryDemo1
     }
 
     @Transactional
-    public void testQueries2()
-    {
+    public void testQueries2() {
         Gson gson = new Gson();
         List<Long> inVals = new ArrayList<>();
         inVals.add(Long.valueOf(33));
@@ -123,12 +118,9 @@ public class QueryDemo1
         //var data = customerRepo.findAll(whereIdSpec.or(whereEmailSpecs));
         var data = customerRepo.findAll(whereIdSpec.or(whereEmailSpecs));
 
-        if (data.isEmpty())
-        {
+        if (data.isEmpty()) {
             System.out.println("no customers found");
-        }
-        else
-        {
+        } else {
 
             System.out.println("total customers found->" + data.size());
             data.forEach(customer -> System.out.println(gson.toJson(customer)));
@@ -143,30 +135,25 @@ public class QueryDemo1
 
 
     @Transactional
-    public void testQueries3()
-    {
+    public void testQueries3() {
         Gson gson = new Gson();
         List<Long> inVals = new ArrayList<>();
         inVals.add(Long.valueOf(33));
         inVals.add(Long.valueOf(34));
         inVals.add(Long.valueOf(35));
 
-        JpaQuerySpecification<DemoCustomer> spec1 = new JpaQuerySpecification<DemoCustomer>()
-        {
+        JpaQuerySpecification<DemoCustomer> spec1 = new JpaQuerySpecification<DemoCustomer>() {
             @Override
-            public Predicate toPredicate(Root<DemoCustomer> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) throws UnsupportedOperationException
-            {
+            public Predicate toPredicate(Root<DemoCustomer> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) throws UnsupportedOperationException {
                 return criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
             }
         };
 
         JpaQuerySpecification<DemoCustomer> spec2 = (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
 
-        AndSpecification<DemoCustomer> spec3 = new AndSpecification<DemoCustomer>()
-        {
+        AndSpecification<DemoCustomer> spec3 = new AndSpecification<DemoCustomer>() {
             @Override
-            public Predicate toPredicate(Root<DemoCustomer> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) throws UnsupportedOperationException
-            {
+            public Predicate toPredicate(Root<DemoCustomer> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) throws UnsupportedOperationException {
                 return criteriaBuilder.like(root.get(DemoCustomer.Fields.firstName), "%De%");
             }
         };
@@ -229,7 +216,7 @@ public class QueryDemo1
                 .values(List.of(
                         LocalDate.of(1995, 11, 24),
                         LocalDate.of(1999, 11, 24)
-                               )).build();
+                )).build();
 
 
         //List<QueryFilter> filters = new ArrayList<>();
@@ -281,12 +268,9 @@ public class QueryDemo1
         //                   )
         //                .findAll();
 
-        if (data.isEmpty())
-        {
+        if (data.isEmpty()) {
             System.out.println("no customers found");
-        }
-        else
-        {
+        } else {
 
             System.out.println("total customers found->" + data.size());
             data.forEach(customer -> System.out.println(gson.toJson(customer)));
@@ -301,8 +285,7 @@ public class QueryDemo1
 
 
     //@Transactional(propagation = Propagation.REQUIRED)
-    public void testQueries4()
-    {
+    public void testQueries4() {
         Gson gson;// = new Gson();
         gson = new GsonBuilder().setExclusionStrategies(new GsonExclusionStrategy()).create();
 
@@ -332,29 +315,23 @@ public class QueryDemo1
                 .findAll(col(Product.Fields.code).like("37"),
                         col("name").like("Chair"));
 
-//        var data2 = productRepo2
-//                .where(col(Product.Fields.code).like("37"))
-//                .or(col("name").like("Chair"))
-//                .findAll();
+        var data2 = productRepo2
+                .where(col(Product.Fields.code).like("37"))
+                .or(col("name").like("Chair"))
+                .findAll();
 
-        if (data.isEmpty())
-        {
+        if (data.isEmpty()) {
             System.out.println("no products found");
-        }
-        else
-        {
+        } else {
 
             System.out.println("total products found->" + data.size());
             //data.forEach(product -> System.out.println(gson.toJson(product)));
             data.forEach(product ->
             {
-                try
-                {
+                try {
                     System.out.println(gson.toJson(product));
                     // System.out.println(objectMapper.writeValueAsString(product));
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
@@ -363,5 +340,11 @@ public class QueryDemo1
 
     }
 
+
+    public void demo111() {
+        logger.warn("best bid/ask is empty in snapshot: " + 11);
+        logger.warn("best bid/ask is empty in snapshot: {} and {}", 11, 12);
+        logger.warn("best bid/ask is empty in snapshot: {} and {}", 11, 12,13);
+    }
 
 }

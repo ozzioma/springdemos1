@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Configuration;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import ozzydev.springdemos.controller.MySQLODataServlet;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;

@@ -56,7 +56,8 @@ public class SpringApp implements CommandLineRunner
         //serviceDemo.testQueries();
         //serviceDemo.testQueries2();
         //queryDemo1.testQueries3();
-        queryDemo1.testQueries4();
+        //queryDemo1.testQueries4();
+        queryDemo1.demo111();
 
 
     }
