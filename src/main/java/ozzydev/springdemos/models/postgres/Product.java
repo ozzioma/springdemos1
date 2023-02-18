@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.Where;
+//import org.teiid.spring.annotations.SelectQuery;
 import ozzydev.springdemos.config.GsonIgnore;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import java.util.Collection;
 @FieldNameConstants
 @Entity
 @Table(name = "product")
+//@SelectQuery("select * from products.Product")
 public class Product
 {
 
@@ -47,7 +49,7 @@ public class Product
     @Column(name = "categoryId")
     private Long categoryId;
 
-    @JsonIgnore
+   // @JsonIgnore
     //@GsonIgnore
     //@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, optional = false, fetch = FetchType.LAZY)
     @ManyToOne(cascade = {CascadeType.MERGE}, optional = true, fetch = FetchType.LAZY)

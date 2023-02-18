@@ -8,17 +8,20 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="springdemos1" />
+        <module name="teiiddemo1" />
         <module name="grpcdemos1" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="grpcdemos1" target="1.5" />
       <module name="springdemos1" target="11" />
+      <module name="teiiddemo1" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="springdemos1" options="-parameters" />
+      <module name="teiiddemo1" options="-parameters" />
     </option>
   </component>
 </project>

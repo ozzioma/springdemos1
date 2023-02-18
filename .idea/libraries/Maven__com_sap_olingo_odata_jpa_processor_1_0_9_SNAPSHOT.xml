@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.sap.olingo:odata-jpa-processor:1.0.9-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sap/olingo/odata-jpa-processor/1.0.9-SNAPSHOT/odata-jpa-processor-1.0.9-20230129.191734-3.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sap/olingo/odata-jpa-processor/1.0.9-SNAPSHOT/odata-jpa-processor-1.0.9-20230129.191734-3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/sap/olingo/odata-jpa-processor/1.0.9-SNAPSHOT/odata-jpa-processor-1.0.9-20230129.191734-3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

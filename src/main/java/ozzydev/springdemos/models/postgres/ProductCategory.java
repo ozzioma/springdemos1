@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.Where;
+//import org.teiid.spring.annotations.SelectQuery;
 import ozzydev.springdemos.config.GsonIgnore;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.util.Collection;
 @Entity
 @Table(name = "productcategory")
 //@Where(clause = "address like '%MD%'")
+//@SelectQuery("select * from products.ProductCategory")
 public class ProductCategory
 {
 
@@ -33,11 +35,10 @@ public class ProductCategory
     @Column(name = "description", length = 255)
     private String description;
 
-    @JsonIgnore
-    @GsonIgnore
+    //@JsonIgnore
+    //@GsonIgnore
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Collection<Product> products;
 
 }
-
 

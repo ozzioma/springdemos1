@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
+//import org.teiid.spring.annotations.SelectQuery;
 import ozzydev.springdemos.config.LocalDateConverter;
 import ozzydev.springdemos.config.LocalDateTimeConverter;
 
@@ -24,11 +25,10 @@ import java.util.Set;
 @FieldNameConstants
 @Table(name = "democustomer")
 //@Where(clause = "address like '%MD%'")
-public class DemoCustomer
-{
+//@SelectQuery("select * from customers.DemoCustomer")
+public class DemoCustomer {
 
-    public DemoCustomer()
-    {
+    public DemoCustomer() {
         //super();
         transactions = new HashSet<>();
     }
@@ -60,16 +60,16 @@ public class DemoCustomer
 
     //@NotNull
     @Column(name = "dob")
-    @Convert(converter = LocalDateConverter.class)
-    //@DateTimeFormat(pattern = "dd-MM-yyyy")
-    //@JsonFormat(pattern = "dd-MM-yyyy")
+    //@Convert(converter = LocalDateConverter.class)
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate dob;
 
     //@NotNull
     @Column(name = "regDate")
-    @Convert(converter = LocalDateTimeConverter.class)
-    //@DateTimeFormat(pattern = "dd-MM-yyyy hh:mm:ss")
-    //@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
+    @Convert(converter = LocalDateTimeConverter.class, disableConversion = true)
+    @DateTimeFormat(pattern = "dd-MM-yyyy hh:mm:ss")
+    @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime registrationDate;
 
     //@NotNull

@@ -1,7 +1,10 @@
 package ozzydev.springdemos.config;
 
 
+import com.sap.olingo.jpa.processor.core.api.JPAODataPagingProvider;
+import com.sap.olingo.jpa.processor.core.api.example.JPAExamplePagingProvider;
 import com.zaxxer.hikari.HikariDataSource;
+import org.atteo.evo.inflector.English;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -20,17 +23,20 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.metamodel.EntityType;
 import javax.sql.DataSource;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Configuration
 @EnableTransactionManagement
 //@EnableJpaRepositories(basePackages = "ozzydev.springdemos.repos", entityManagerFactoryRef = "entityManager", transactionManagerRef = "transactionManager")
 @EnableJpaRepositories(basePackages = "ozzydev.springdemos.repos.mysql", entityManagerFactoryRef = "primaryEntityManager",
         transactionManagerRef = "primaryTransactionManager")
-public class PrimaryDbConfig
-{
+public class PrimaryDbConfig {
 
     @Autowired
     Environment env;
@@ -38,32 +44,28 @@ public class PrimaryDbConfig
     @Bean
     @Primary
     @ConfigurationProperties(prefix = "app.datasource.primary")
-    public DataSourceProperties primaryDataSourceProperties()
-    {
+    public DataSourceProperties primaryDataSourceProperties() {
         return new DataSourceProperties();
     }
 
     @Bean
     @Primary
     @Qualifier("primaryDS")
-    public DataSource primaryDataSource()
-    {
+    public DataSource primaryDataSource() {
         return primaryDataSourceProperties().initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
 
-    @Bean
-    //@Primary
-    //@Qualifier("primaryDS")
-    @ConfigurationProperties(prefix = "spring.datasource.customers")
-    public DataSource customers()
-    {
-        return DataSourceBuilder.create().build();
-    }
+//    @Bean
+//    //@Primary
+//    //@Qualifier("primaryDS")
+//    @ConfigurationProperties(prefix = "spring.datasource.customers")
+//    public DataSource customers() {
+//        return DataSourceBuilder.create().build();
+//    }
 
     @Bean
     @Primary
-    public LocalContainerEntityManagerFactoryBean primaryEntityManager()
-    {
+    public LocalContainerEntityManagerFactoryBean primaryEntityManager() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(primaryDataSource());
         em.setPackagesToScan("ozzydev.springdemos.models.mysql");
@@ -84,8 +86,7 @@ public class PrimaryDbConfig
 
     @Bean
     @Primary
-    public PlatformTransactionManager primaryTransactionManager()
-    {
+    public PlatformTransactionManager primaryTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(primaryEntityManager().getObject());
         return transactionManager;
@@ -93,15 +94,13 @@ public class PrimaryDbConfig
 
     @Bean
     @Qualifier("primaryEmf")
-    public EntityManagerFactory getEntityManagerFactory()
-    {
+    public EntityManagerFactory primaryEntityManagerFactory() {
         return primaryEntityManager().getObject();
     }
 
     @Bean
     @Qualifier("primaryEm")
-    public EntityManager getEntityManager()
-    {
+    public EntityManager getEntityManager() {
         return primaryEntityManager().getObject().createEntityManager();
     }
 
@@ -113,6 +112,49 @@ public class PrimaryDbConfig
 //
 //        return new PagingProvider(pageSizes, BUFFER_SIZE);
 //    }
+
+
+    @Bean
+    @Qualifier("primaryPagingProvider")
+    public JPAODataPagingProvider primaryPagingProvider() {
+        int BUFFER_SIZE = 10;
+        final Map<String, Integer> pageSizes = new HashMap<>();
+        //pageSizes.put("Companies", 5);
+        //pageSizes.put("AdministrativeDivisions", 10);
+
+        try {
+
+            Set<EntityType<?>> entityTypes = primaryEntityManagerFactory().getMetamodel().getEntities();
+            for (javax.persistence.metamodel.EntityType entityType : entityTypes) {
+                //logger.info(entityType.getName());
+                //logger.info(entityType.getJavaType().getCanonicalName());
+                //logger.info("******************************");
+
+                System.out.println("entity name->" + entityType.getName() +  " canonical Name->" + entityType.getJavaType().getCanonicalName());
+                System.out.println("plural entity name->" + English.plural(entityType.getName()));
+
+                pageSizes.put(English.plural(entityType.getName()), 20);
+            }
+
+//            DatabaseMetaData metaData = secondaryDataSource().getConnection().getMetaData();
+//            ResultSet tables = metaData.getTables(null, null, null, new String[]{"TABLE"});
+//            while (tables.next()) {
+//                var tableName = tables.getString("TABLE_NAME");
+//                var tableType = tables.getString("TABLE_TYPE");
+//                var tableTypeName = tables.getString("TYPE_NAME");
+//                System.out.println("table name->" + tableName + " table type->" + tableType + " type Name->" + tableTypeName);
+//
+//                pageSizes.put(tableName, 20);
+//            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+
+        return new JPAExamplePagingProvider(pageSizes, BUFFER_SIZE);
+        //return new JPAODataPagingProvider(pageSizes, BUFFER_SIZE);
+    }
 
 }
 

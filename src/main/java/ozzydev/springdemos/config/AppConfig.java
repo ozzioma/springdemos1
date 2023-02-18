@@ -2,11 +2,21 @@ package ozzydev.springdemos.config;
 
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.sap.olingo.jpa.processor.core.api.JPAODataPagingProvider;
+import com.sap.olingo.jpa.processor.core.api.JPAODataRequestContext;
 import com.sap.olingo.jpa.processor.core.api.JPAODataServiceContext;
+import com.sap.olingo.jpa.processor.core.api.JPAODataSessionContextAccess;
+import com.sap.olingo.jpa.processor.core.api.example.JPAExampleCUDRequestHandler;
+import com.speedment.jpastreamer.application.JPAStreamer;
+import org.apache.olingo.commons.api.ex.ODataException;
+import org.apache.olingo.server.api.debug.DefaultDebugSupport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,17 +28,26 @@ import org.springframework.context.annotation.Configuration;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import org.springframework.context.annotation.Scope;
+import org.springframework.orm.jpa.EntityManagerFactoryInfo;
+//import org.teiid.spring.autoconfigure.MultiDataSourceTransactionManagement;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.sql.DataSource;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
+import static org.springframework.web.context.WebApplicationContext.SCOPE_REQUEST;
+
 
 @Configuration
-public class AppConfig
+public class AppConfig //extends MultiDataSourceTransactionManagement
 {
 
-    @Autowired
-    AutowireCapableBeanFactory beanFactory;
+    //@Autowired
+    // AutowireCapableBeanFactory beanFactory;
 
     //    @Bean
     //    public Docket api()
@@ -42,8 +61,7 @@ public class AppConfig
 
 
     @Bean
-    public OpenAPI customOpenAPI(@Value("${application-description}") String appDesciption, @Value("${application-version}") String appVersion)
-    {
+    public OpenAPI customOpenAPI(@Value("${application-description}") String appDesciption, @Value("${application-version}") String appVersion) {
         return new OpenAPI()
                 .info(new Info()
                         .title("Ozzy API")
@@ -54,16 +72,17 @@ public class AppConfig
     }
 
     private static final String dateFormat = "yyyy-MM-dd";
+    private static final String dateFormat2 = "dd-MM-yyyy";
     private static final String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+    private static final String dateTimeFormat2 = "dd-MM-yyyy HH:mm:ss";
 
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer()
-    {
+    public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
         return builder ->
         {
-            builder.simpleDateFormat(dateTimeFormat);
-            builder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern(dateFormat)));
-            builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(dateTimeFormat)));
+            builder.simpleDateFormat(dateTimeFormat2);
+            builder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern(dateFormat2)));
+            builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(dateTimeFormat2)));
         };
     }
 
@@ -90,5 +109,88 @@ public class AppConfig
     //    }
 
 
+    //@Value("${odata.jpa.punit_name}")
+    private String punitPrimary = "customers";
+    private String punitSecondary = "products";
+    //@Value("${odata.jpa.root_packages}")
+    private String rootPackagesPrimary = "ozzydev.springdemos.models.mysql";
+    private String rootPackagesSecondary = "ozzydev.springdemos.models.postgres";
+
+    //    @PersistenceContext(unitName = "primary")
+//    private EntityManager primaryEntityManager;
+    @Bean
+    @Qualifier("primaryODataSessionContext")
+    public JPAODataSessionContextAccess sessionContextPrimary(
+            @Autowired @Qualifier("primaryEmf") final EntityManagerFactory emf,
+            @Autowired @Qualifier("primaryPagingProvider") final JPAODataPagingProvider pagingProvider) throws ODataException {
+
+//        EntityManagerFactoryInfo info = (EntityManagerFactoryInfo) emf;
+//        var ds = info.getDataSource();
+
+        return JPAODataServiceContext.with()
+                .setPUnit(punitPrimary)
+                .setEntityManagerFactory(emf)
+                .setTypePackage(rootPackagesPrimary)
+                .setPagingProvider(pagingProvider)
+                .setRequestMappingPath("customers/v1")
+                .setUseAbsoluteContextURL(true)
+                .build();
+    }
+
+
+    @Bean
+    @Qualifier("primaryJpaStreamer")
+    public JPAStreamer primaryJpaStreamer( @Autowired @Qualifier("primaryEmf") final EntityManagerFactory emf) {
+        return JPAStreamer.of(emf);
+    }
+
+    @Bean
+    @Qualifier("secondaryODataSessionContext")
+    public JPAODataSessionContextAccess sessionContextSecondary(
+            @Autowired @Qualifier("secondaryEmf") final EntityManagerFactory emf,
+            @Autowired @Qualifier("secondaryPagingProvider") final JPAODataPagingProvider pagingProvider) throws ODataException {
+
+//        EntityManagerFactoryInfo info = (EntityManagerFactoryInfo) emf;
+//        var ds = info.getDataSource();
+
+        return JPAODataServiceContext.with()
+                .setPUnit(punitSecondary)
+                .setEntityManagerFactory(emf)
+                .setTypePackage(rootPackagesSecondary)
+                .setPagingProvider(pagingProvider)
+                .setRequestMappingPath("products/v1")
+                .setUseAbsoluteContextURL(true)
+                .build();
+    }
+
+
+    @Bean
+    @Qualifier("secondaryJpaStreamer")
+    public JPAStreamer secondaryJpaStreamer( @Autowired @Qualifier("secondaryEmf") final EntityManagerFactory emf) {
+        return JPAStreamer.of(emf);
+    }
+
+    @Bean
+    @Scope(scopeName = SCOPE_REQUEST)
+    public JPAODataRequestContext requestContext() {
+
+        return JPAODataRequestContext.with()
+                .setCUDRequestHandler(new JPAExampleCUDRequestHandler())
+                .setDebugSupport(new DefaultDebugSupport())
+                .build();
+    }
+
+
+//    @ConfigurationProperties(prefix = "spring.datasource.customers")
+//    @Bean
+//    public DataSource customer() {
+//        return DataSourceBuilder.create().build();
+//    }
+//
+//    @ConfigurationProperties(prefix = "spring.datasource.products")
+//    @Bean
+//    public DataSource products() {
+//        return DataSourceBuilder.create().build();
+//    }
 }
 

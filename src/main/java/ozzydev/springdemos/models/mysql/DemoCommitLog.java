@@ -1,6 +1,7 @@
 package ozzydev.springdemos.models.mysql;
 
 import lombok.Data;
+//import org.teiid.spring.annotations.SelectQuery;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -11,6 +12,7 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @Table(name = "demolog")
+//@SelectQuery("select * from customers.DemoCommitLog")
 public class DemoCommitLog {
 
     @Id

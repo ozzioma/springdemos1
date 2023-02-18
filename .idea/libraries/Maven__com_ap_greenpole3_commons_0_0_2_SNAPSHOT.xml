@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.ap.greenpole3:commons:0.0.2-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ap/greenpole3/commons/0.0.2-SNAPSHOT/commons-0.0.2-20230129.204622-3.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ap/greenpole3/commons/0.0.2-SNAPSHOT/commons-0.0.2-20230129.204622-3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ap/greenpole3/commons/0.0.2-SNAPSHOT/commons-0.0.2-20230129.204622-3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

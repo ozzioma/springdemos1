@@ -51,7 +51,7 @@ public class DataSeeder
             return;
         }
 
-        for (int count = 0; count <= 200; count++)
+        for (int count = 0; count <= 500; count++)
         {
             DemoCustomer customer = new DemoCustomer();
             customer.setAddress(faker.address().fullAddress());
@@ -93,7 +93,7 @@ public class DataSeeder
         Faker faker = new Faker();
 
 
-        for (int count = 0; count <= 10; count++)
+        for (int count = 0; count <= 20; count++)
         {
             String categoryName = faker.commerce().material();
             var checkCatName = productCategoryRepo.existsByName(categoryName);
@@ -106,7 +106,7 @@ public class DataSeeder
 
                 productCategoryRepo.save(category);
 
-                for (int count2 = 0; count2 <= 20; count2++)
+                for (int count2 = 0; count2 <= 50; count2++)
                 {
                     String productName = faker.commerce().productName();
                     Boolean checkProdName = productRepo.existsByName((productName));
